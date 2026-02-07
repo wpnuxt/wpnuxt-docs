@@ -33,6 +33,8 @@ export default defineNuxtConfig({
     '/docs/advanced/performance': { redirect: { to: '/guide/caching', statusCode: 301 } },
     '/docs/advanced/composables-api': { redirect: { to: '/reference/composables', statusCode: 301 } },
     '/docs/cheat-sheet': { redirect: { to: '/reference/composables', statusCode: 301 } },
+    '/docs/localdev/localwp': { redirect: { to: '/guide/local-development', statusCode: 301 } },
+    '/docs/localdev/**': { redirect: { to: '/guide/local-development', statusCode: 301 } },
     '/docs/getting-started': { redirect: { to: '/getting-started', statusCode: 301 } },
     '/docs/getting-started/installation': { redirect: { to: '/getting-started/installation', statusCode: 301 } },
     '/docs/getting-started/wordpress-setup': { redirect: { to: '/getting-started/wordpress-setup', statusCode: 301 } },
