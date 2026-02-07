@@ -14,6 +14,16 @@ export default defineAppConfig({
         }
       }
     },
+    header: {
+      slots: {
+        root: 'dark:bg-secondary-500/60'
+      }
+    },
+    pageHero: {
+      slots: {
+        root: 'relative isolate hero-dot-pattern'
+      }
+    },
     footer: {
       slots: {
         bottom: {

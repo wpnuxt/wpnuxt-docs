@@ -37,3 +37,7 @@ logs
 .wrangler
 .vercel
 .env*.local
+
+.agents/                                                                                                                                                           
+.claude/settings.local.json                                                                                                                                        
+.mcp.json  

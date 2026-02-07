@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
-    "@nuxtjs/mcp-toolkit": "^0.6.2",
+    "@nuxtjs/mcp-toolkit": "^0.6.3",
     "@shikijs/engine-javascript": "^3.22.0",
     "docus": "^5.5.0",
     "nuxt": "^4.3.0",

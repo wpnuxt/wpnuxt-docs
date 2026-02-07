@@ -10,21 +10,9 @@ seo:
 orientation: vertical
 ---
 
-#headline
-  :::u-badge
-  ---
-  variant: soft
-  color: warning
-  icon: i-ph-flask
-  size: md
-  style: 'margin-bottom: 20px'
-  ---
-  2.0 Alpha - Nuxt 4
-  :::
-
 #title
 <span class="font-serif">WP</span><span class="text-[var(--ui-primary)]">Nuxt</span><br><br>
-Nuxt 4 <span class="text-[var(--ui-primary)]">+</span> <span class="font-serif">WordPress</span>
+Nuxt <span class="text-[var(--ui-primary)]">+</span> headless <span class="font-serif">WordPress</span>
 
 #description
 Type-safe composables for fetching WordPress content via GraphQL.<br>Render Gutenberg blocks as Vue components.
@@ -50,21 +38,6 @@ Type-safe composables for fetching WordPress content via GraphQL.<br>Render Gute
   ---
   View on GitHub
   :::
-::
-
-
-::u-page-section
----
-class: text-center w-auto mx-auto max-w-2xl
----
-  ::u-alert
-  ---
-  color: warning
-  variant: subtle
-  icon: i-ph-warning
-  title: WPNuxt 2.0 is in alpha. The API may change before stable release.
-  ---
-  ::
 ::
 
 ::u-page-section
