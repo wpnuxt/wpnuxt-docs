@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 
   site: {
     name: 'WPNuxt',
-    url: 'https://wpnuxt-docs.vercel.app'
+    url: 'https://wpnuxt.com'
   },
 
   // Runtime config for MCP WordPress connection
@@ -23,7 +23,28 @@ export default defineNuxtConfig({
   routeRules: {
     // MCP endpoints need server-side rendering
     '/mcp/**': { ssr: true },
-    '/sse': { ssr: true }
+    '/sse': { ssr: true },
+
+    // Redirects: old /docs/* structure → new root structure
+    '/docs/getting-started/configuration': { redirect: { to: '/reference/configuration', statusCode: 301 } },
+    '/docs/getting-started/composables': { redirect: { to: '/reference/composables', statusCode: 301 } },
+    '/docs/getting-started/images': { redirect: { to: '/guide/images', statusCode: 301 } },
+    '/docs/getting-started/authentication': { redirect: { to: '/auth', statusCode: 301 } },
+    '/docs/advanced/performance': { redirect: { to: '/guide/caching', statusCode: 301 } },
+    '/docs/advanced/composables-api': { redirect: { to: '/reference/composables', statusCode: 301 } },
+    '/docs/cheat-sheet': { redirect: { to: '/reference/composables', statusCode: 301 } },
+    '/docs/getting-started': { redirect: { to: '/getting-started', statusCode: 301 } },
+    '/docs/getting-started/installation': { redirect: { to: '/getting-started/installation', statusCode: 301 } },
+    '/docs/getting-started/wordpress-setup': { redirect: { to: '/getting-started/wordpress-setup', statusCode: 301 } },
+    '/docs/getting-started/quick-start': { redirect: { to: '/getting-started/quick-start', statusCode: 301 } },
+    '/docs/guide/**': { redirect: { to: '/guide', statusCode: 301 } },
+    '/docs/deploy/**': { redirect: { to: '/deploy/vercel', statusCode: 301 } },
+    '/docs/migration/**': { redirect: { to: '/migration/v1-to-v2', statusCode: 301 } },
+    '/docs/reference/**': { redirect: { to: '/reference/configuration', statusCode: 301 } },
+    '/docs/auth/**': { redirect: { to: '/auth', statusCode: 301 } },
+    '/docs/ai/**': { redirect: { to: '/ai', statusCode: 301 } },
+    '/docs/**': { redirect: { to: '/getting-started', statusCode: 301 } },
+    '/docs': { redirect: { to: '/getting-started', statusCode: 301 } }
   },
 
   // Enable async context for Nitro request handling
@@ -31,7 +52,7 @@ export default defineNuxtConfig({
     asyncContext: true
   },
 
-  compatibilityDate: '2025-12-26',
+  compatibilityDate: '2026-02-07',
 
   // Force exit after build - workaround for @modelcontextprotocol/sdk keeping process alive
   hooks: {
@@ -41,7 +62,7 @@ export default defineNuxtConfig({
   },
 
   llms: {
-    domain: 'https://wpnuxt-docs.vercel.app'
+    domain: 'https://wpnuxt.com'
   },
 
   mcp: {
