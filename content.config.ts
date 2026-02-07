@@ -6,8 +6,8 @@ export default defineContentConfig({
         source: {
             cwd: process.env.WPNUXT_PATH ?? undefined,
             repository: !process.env.WPNUXT_PATH ? 'https://github.com/wpnuxt/wpnuxt/tree/main' : undefined,
-            include: 'docs/**/*',
-            exclude: ['docs/**/*.json'],
+            include: 'docs/content/**/*',
+            exclude: ['docs/content/**/*.json'],
             prefix: '/'
           },
         type: 'page',
