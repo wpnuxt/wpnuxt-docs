@@ -33,6 +33,11 @@ export default defineAppConfig({
       }
     }
   },
+  github: {
+    url: 'https://github.com/wpnuxt/wpnuxt',
+    branch: 'main',
+    rootDir: 'docs' // adjust to wherever content/ lives in the monorepo
+  },
   seo: {
     siteName: 'WPNuxt '
   },
