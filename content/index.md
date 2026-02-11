@@ -15,7 +15,7 @@ orientation: vertical
 Nuxt <span class="text-[var(--ui-primary)]">+</span> headless <span class="font-serif">WordPress</span>
 
 #description
-Type-safe composables for fetching WordPress content via GraphQL.<br>Render Gutenberg blocks as Vue components.<br><span class="text-sm opacity-75">Currently in alpha — API is stabilizing.</span>
+Type-safe composables for fetching WordPress content via GraphQL.<br>Render Gutenberg blocks as Vue components.<br><span class="text-sm opacity-75">Currently in beta — API is stable.</span>
 
 #links
   :::u-button
