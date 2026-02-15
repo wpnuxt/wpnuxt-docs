@@ -82,6 +82,10 @@ export default defineNuxtConfig({
     browserRedirect: '/ai'
   },
 
+  ogImage: {
+    enabled: false
+  },
+
   pwa: {
     enabled: false
   },
