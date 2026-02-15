@@ -1,6 +1,8 @@
 export default defineNuxtConfig({
   extends: ['docus'],
 
+  modules: ['@nuxtjs/plausible'],
+
   css: ['~/assets/css/main.css'],
 
   site: {
@@ -64,7 +66,7 @@ export default defineNuxtConfig({
     asyncContext: true
   },
 
-  compatibilityDate: '2026-02-07',
+  compatibilityDate: '2026-02-16',
 
   // Force exit after build - workaround for @modelcontextprotocol/sdk keeping process alive
   hooks: {
@@ -75,6 +77,10 @@ export default defineNuxtConfig({
 
   llms: {
     domain: 'https://wpnuxt.com'
+  },
+
+  plausible: {
+    apiHost: 'https://wpnuxt.com/plio'
   },
 
   mcp: {
