@@ -8,6 +8,16 @@ export default defineNuxtConfig({
     url: 'https://wpnuxt.com'
   },
 
+  app: {
+    head: {
+      meta: [
+        { property: 'og:image', content: 'https://wpnuxt.com/wpnuxt.png' },
+        { name: 'twitter:image', content: 'https://wpnuxt.com/wpnuxt.png' },
+        { name: 'twitter:card', content: 'summary_large_image' }
+      ]
+    }
+  },
+
   // Runtime config for MCP WordPress connection
   runtimeConfig: {
     // WordPress GraphQL endpoint (set via NUXT_WORDPRESS_URL env var)
