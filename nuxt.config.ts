@@ -99,5 +99,12 @@ export default defineNuxtConfig({
   // Disable syntax highlighting to avoid shiki dependency issues
   mdc: {
     highlight: false
+  },
+
+  // Ensure minimark is included in Vercel serverless bundle
+  nitro: {
+    externals: {
+      traceInclude: ['node_modules/minimark/dist/stringify.mjs']
+    }
   }
 })
