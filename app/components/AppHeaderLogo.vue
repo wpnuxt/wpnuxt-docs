@@ -8,7 +8,6 @@ const { data } = await useFetch('/api/version')
     <span class="text-primary">Nuxt</span>
     <UBadge
       v-if="data?.version"
-      size="sm"
       variant="subtle"
       class="ml-2"
     >

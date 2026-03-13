@@ -8,16 +8,16 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.26.0",
-    "@nuxtjs/mcp-toolkit": "^0.6.4",
-    "@shikijs/engine-javascript": "^3.22.0",
-    "docus": "^5.5.1",
-    "nuxt": "^4.3.1",
-    "shiki": "^3.22.0",
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@nuxtjs/mcp-toolkit": "^0.7.0",
+    "@shikijs/engine-javascript": "^4.0.2",
+    "docus": "^5.8.0",
+    "nuxt": "^4.4.2",
+    "shiki": "^4.0.2",
     "zod": "^4.3.6"
   },
   "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
   "devDependencies": {
-    "@nuxtjs/plausible": "^3.0.0"
+    "@nuxtjs/plausible": "^3.0.2"
   }
 }
