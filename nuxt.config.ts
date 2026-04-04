@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     wordpressAppUser: '',
     wordpressAppPassword: '',
     // Package version (used by wpnuxt_init to set @wpnuxt/core dependency)
-    wpnuxtVersion: '2.0.0'
+    wpnuxtVersion: '2.2.0'
   },
 
   // Hybrid rendering: static docs, dynamic MCP

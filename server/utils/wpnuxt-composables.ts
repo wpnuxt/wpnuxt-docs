@@ -147,6 +147,43 @@ export const DEFAULT_COMPOSABLES: ComposableDefinition[] = [
 ]
 
 /**
+ * Additional composables added in v2.1.0+
+ * These are NOT auto-generated from queries
+ */
+export const ADDITIONAL_COMPOSABLES = [
+  {
+    name: 'useWPConnection',
+    description: 'Pagination composable for WordPress connections with cursor-based pagination and loadMore() for infinite scroll',
+    since: '2.2.0'
+  },
+  {
+    name: 'isPost',
+    description: 'Type guard to check if a content node is a Post',
+    since: '2.1.0'
+  },
+  {
+    name: 'isPage',
+    description: 'Type guard to check if a content node is a Page',
+    since: '2.1.0'
+  },
+  {
+    name: 'isContentType',
+    description: 'Generic type guard for any content type',
+    since: '2.1.0'
+  },
+  {
+    name: 'unwrapScalar',
+    description: 'Unwrap a scalar ACF field value from GraphQL response',
+    since: '2.1.0'
+  },
+  {
+    name: 'unwrapConnection',
+    description: 'Unwrap an ACF relationship/connection field into a flat array',
+    since: '2.1.0'
+  }
+]
+
+/**
  * Composable prefixes for different variants
  */
 export const COMPOSABLE_PREFIXES = {
@@ -289,6 +326,18 @@ export function getComposablesQuickReference(): string {
     '',
     '## Usage Pattern',
     'const { data, pending, error } = await useLazy{QueryName}({ ...params })',
+    '',
+    '> **v2.1.0+**: All parameters support reactive values (refs, computed). The query re-executes automatically when reactive params change.',
+    '',
+    '## Pagination (v2.2.0+)',
+    'const { nodes, loadMore, hasNextPage, loading } = useWPConnection(\'Posts\', { first: 10 })',
+    '',
+    '## Type Guards (v2.1.0+)',
+    '- `isPost(node)` / `isPage(node)` / `isContentType(node, \'Event\')`',
+    '',
+    '## ACF Helpers (v2.1.0+)',
+    '- `unwrapScalar(acfFields, \'fieldName\', defaultValue)`',
+    '- `unwrapConnection(acfFields, \'relationshipField\')`',
     '',
     '## Available Composables',
     ''

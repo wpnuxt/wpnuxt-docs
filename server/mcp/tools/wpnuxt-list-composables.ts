@@ -26,6 +26,13 @@ const DEFAULT_QUERIES = [
  */
 const CORE_COMPOSABLES = [
   {
+    name: 'useWPConnection',
+    description: 'Pagination composable for WordPress connections. Wraps any query that returns a WPGraphQL connection (with pageInfo + nodes). Supports cursor-based pagination and infinite scroll via loadMore().',
+    usage: 'const { nodes, pageInfo, loadMore, loading } = useWPConnection(\'Posts\', { first: 10 })',
+    returns: '{ nodes: Ref<T[]>, pageInfo: Ref<PageInfo>, loadMore: () => Promise<void>, loading: Ref<boolean>, hasNextPage: ComputedRef<boolean> }',
+    since: '2.2.0'
+  },
+  {
     name: 'usePrevNextPost',
     description: 'Gets previous and next posts for navigation based on current post slug',
     usage: 'const { prev, next } = await usePrevNextPost(\'my-post-slug\')',
@@ -46,6 +53,51 @@ const CORE_COMPOSABLES = [
 ]
 
 /**
+ * Type guard helpers - added in v2.1.0
+ * Help narrow content types safely in templates and composables
+ */
+const TYPE_GUARD_HELPERS = [
+  {
+    name: 'isPost',
+    description: 'Type guard to check if a content node is a Post',
+    usage: 'if (isPost(node)) { /* node is typed as Post */ }',
+    since: '2.1.0'
+  },
+  {
+    name: 'isPage',
+    description: 'Type guard to check if a content node is a Page',
+    usage: 'if (isPage(node)) { /* node is typed as Page */ }',
+    since: '2.1.0'
+  },
+  {
+    name: 'isContentType',
+    description: 'Generic type guard for any content type. Works with custom post types.',
+    usage: 'if (isContentType(node, \'Event\')) { /* node is typed as Event */ }',
+    since: '2.1.0'
+  }
+]
+
+/**
+ * ACF (Advanced Custom Fields) helpers - added in v2.1.0
+ */
+const ACF_HELPERS = [
+  {
+    name: 'unwrapScalar',
+    description: 'Unwrap a scalar ACF field value from the GraphQL response object. Handles null safety.',
+    usage: 'const price = unwrapScalar(product.acfFields, \'price\', 0)',
+    returns: 'T - the unwrapped scalar value or the provided default',
+    since: '2.1.0'
+  },
+  {
+    name: 'unwrapConnection',
+    description: 'Unwrap an ACF relationship/connection field into a flat array of nodes.',
+    usage: 'const relatedPosts = unwrapConnection(product.acfFields, \'relatedPosts\')',
+    returns: 'T[] - array of connected nodes',
+    since: '2.1.0'
+  }
+]
+
+/**
  * Utility functions exported from @wpnuxt/core
  */
 const UTILITY_FUNCTIONS = [
@@ -61,8 +113,10 @@ export default defineMcpTool({
   description: `List WPNuxt composables available for the project.
 
 Returns all composables from @wpnuxt/core:
-- Auto-generated query composables (from .gql files)
-- Core composables (usePrevNextPost, useWPContent, useAsyncWPContent)
+- Auto-generated query composables (from .gql files) — support reactive parameters (v2.1.0+)
+- Core composables (useWPConnection for pagination/infinite scroll, usePrevNextPost, useWPContent, useAsyncWPContent)
+- Type guard helpers (isPost, isPage, isContentType) for safe content type narrowing (v2.1.0+)
+- ACF helpers (unwrapScalar, unwrapConnection) for Advanced Custom Fields integration (v2.1.0+)
 - Utility functions (getRelativeImagePath)
 
 For detailed operation information, use the nuxt-graphql-middleware MCP tools:
@@ -90,8 +144,10 @@ For detailed operation information, use the nuxt-graphql-middleware MCP tools:
       summary: {
         generatedQueryComposables: DEFAULT_QUERIES.length * 3,
         coreComposables: CORE_COMPOSABLES.length,
+        typeGuards: TYPE_GUARD_HELPERS.length,
+        acfHelpers: ACF_HELPERS.length,
         utilityFunctions: UTILITY_FUNCTIONS.length,
-        total: DEFAULT_QUERIES.length * 3 + CORE_COMPOSABLES.length + UTILITY_FUNCTIONS.length
+        total: DEFAULT_QUERIES.length * 3 + CORE_COMPOSABLES.length + TYPE_GUARD_HELPERS.length + ACF_HELPERS.length + UTILITY_FUNCTIONS.length
       },
 
       coreComposables: {
@@ -99,18 +155,36 @@ For detailed operation information, use the nuxt-graphql-middleware MCP tools:
         composables: CORE_COMPOSABLES
       },
 
+      typeGuards: {
+        description: 'Type guard helpers for safe content type narrowing (v2.1.0+)',
+        helpers: TYPE_GUARD_HELPERS
+      },
+
+      acfHelpers: {
+        description: 'Advanced Custom Fields helpers for unwrapping ACF field values (v2.1.0+)',
+        helpers: ACF_HELPERS
+      },
+
       utilityFunctions: {
         description: 'Utility functions exported from @wpnuxt/core',
-        functions: UTILITY_FUNCTIONS
+        functions: [
+          {
+            name: 'getRelativeImagePath',
+            description: 'Transforms WordPress absolute image URLs to relative paths',
+            usage: 'const relativePath = getRelativeImagePath(absoluteUrl)',
+            returns: 'string - relative path starting with /'
+          }
+        ]
       },
 
       generatedComposables: {
-        description: 'Auto-generated from default GraphQL queries. Each query generates 3 variants.',
+        description: 'Auto-generated from default GraphQL queries. Each query generates 3 variants. All parameters are reactive as of v2.1.0.',
         variants: {
           sync: 'use{Name} - Synchronous, blocks rendering',
           async: 'useAsync{Name} - Works with Suspense',
           lazy: 'useLazy{Name} - Returns { data, pending, error }, recommended for pages'
         },
+        reactiveParameters: 'Since v2.1.0, all parameters support reactive values (refs, computed). The query re-executes automatically when reactive params change.',
         composables: queryComposables
       },
 
@@ -119,7 +193,16 @@ For detailed operation information, use the nuxt-graphql-middleware MCP tools:
         examples: [
           'const { data: menu } = await useLazyMenu({ name: \'main\' })',
           'const { data: posts } = await useLazyPosts({ limit: 10 })',
-          'const { prev, next } = await usePrevNextPost(currentSlug)'
+          'const { prev, next } = await usePrevNextPost(currentSlug)',
+          '// Pagination with useWPConnection (v2.2.0+)',
+          'const { nodes, loadMore, hasNextPage } = useWPConnection(\'Posts\', { first: 10 })',
+          '// Reactive parameters (v2.1.0+)',
+          'const category = ref(\'news\')',
+          'const { data: posts } = await useLazyPostsByCategoryName({ categoryName: category })',
+          '// Type guards (v2.1.0+)',
+          'if (isPost(node)) { console.log(node.title) }',
+          '// ACF helpers (v2.1.0+)',
+          'const price = unwrapScalar(product.acfFields, \'price\', 0)'
         ]
       },
 

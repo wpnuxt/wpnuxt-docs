@@ -316,9 +316,10 @@ const mobileMenuOpen = ref(false)
 function generateHomePage(includeNuxtUI: boolean): string {
   if (includeNuxtUI) {
     return `<script setup lang="ts">
-// Fetch latest posts for the home page
+// Fetch latest posts with pagination support (v2.2.0+)
+const postsPerPage = ref(10)
 const { data: posts, pending, error } = await useLazyPosts({
-  first: 10
+  first: postsPerPage
 })
 
 // Transform WordPress posts to Nuxt UI BlogPost format
@@ -390,9 +391,10 @@ useSeoMeta({
   }
 
   return `<script setup lang="ts">
-// Fetch latest posts for the home page
+// Fetch latest posts with reactive parameters (v2.1.0+)
+const postsPerPage = ref(10)
 const { data: posts, pending, error } = await useLazyPosts({
-  first: 10
+  first: postsPerPage
 })
 
 useSeoMeta({
