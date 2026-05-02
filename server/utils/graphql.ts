@@ -22,12 +22,12 @@ export interface GraphQLResponse<T = unknown> {
  * - X-WordPress-App-User: Optional application username for authenticated requests
  * - X-WordPress-App-Password: Optional application password for authenticated requests
  */
-function getWordPressConfig() {
+async function getWordPressConfig() {
   const event = useEvent()
   const runtimeConfig = useRuntimeConfig()
 
   // Use the session-aware URL getter (handles header > session > env priority)
-  const wordpressUrl = getWordPressUrl(event)
+  const wordpressUrl = await getWordPressUrl()
 
   // Auth credentials from headers or environment
   const appUser = getHeader(event, 'x-wordpress-app-user') || runtimeConfig.wordpressAppUser
@@ -47,7 +47,7 @@ export async function executeGraphQL<T = unknown>(
   query: string,
   variables?: Record<string, unknown>
 ): Promise<GraphQLResponse<T>> {
-  const config = getWordPressConfig()
+  const config = await getWordPressConfig()
 
   if (!config.wordpressUrl) {
     throw new Error('No WordPress site connected. Use the wp_connect tool to connect to a WordPress site first.')

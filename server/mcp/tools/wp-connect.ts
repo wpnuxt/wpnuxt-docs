@@ -38,40 +38,38 @@ The WordPress site must have WPGraphQL plugin installed and accessible.`,
   },
 
   async handler({ wordpressUrl, disconnect }) {
-    const event = useEvent()
-
     // Handle disconnect
     if (disconnect) {
-      clearWordPressSession(event)
-      return jsonResult({
+      await clearWordPressSession()
+      return {
         status: 'disconnected',
         message: 'Disconnected from WordPress. Call wp_connect with a URL to connect to a new site.'
-      })
+      }
     }
 
     // If no URL provided, show current status
     if (!wordpressUrl) {
-      const sessionInfo = getSessionInfo(event)
+      const sessionInfo = await getSessionInfo()
 
       if (!sessionInfo.hasSession) {
-        return jsonResult({
+        return {
           status: 'not_connected',
           message: 'No WordPress site connected. Please provide a WordPress URL to connect.',
           hint: 'Call wp_connect with wordpressUrl parameter, e.g., wordpressUrl: "https://your-site.com"',
           requiresInput: true,
           inputPrompt: 'What is the URL of your WordPress site?'
-        })
+        }
       }
 
-      return jsonResult({
+      return {
         status: 'connected',
         wordpressUrl: sessionInfo.wordpressUrl,
         siteName: sessionInfo.siteName,
         source: sessionInfo.source,
-        connectedAt: sessionInfo.connectedAt?.toISOString(),
+        connectedAt: sessionInfo.connectedAt,
         message: `Connected to ${sessionInfo.siteName || sessionInfo.wordpressUrl}`,
         hint: 'To change WordPress sites, call wp_connect with a different URL. To disconnect, use disconnect: true.'
-      })
+      }
     }
 
     // Validate and connect to the new WordPress URL
@@ -80,15 +78,15 @@ The WordPress site must have WPGraphQL plugin installed and accessible.`,
     // Test the connection by fetching site settings
     try {
       // Temporarily set the URL in the session for the test query
-      setWordPressSession(event, normalizedUrl)
+      await setWordPressSession(normalizedUrl)
 
       const result = await executeGraphQL<SiteSettings>(SITE_SETTINGS_QUERY)
 
       if (result.errors) {
         // Clear the failed session
-        clearWordPressSession(event)
+        await clearWordPressSession()
 
-        return jsonResult({
+        return {
           status: 'error',
           message: `Could not connect to WordPress at ${normalizedUrl}`,
           errors: result.errors.map(e => e.message),
@@ -97,16 +95,16 @@ The WordPress site must have WPGraphQL plugin installed and accessible.`,
             'Check that the GraphQL endpoint is accessible at /graphql',
             'Verify the URL is correct and the site is reachable'
           ]
-        })
+        }
       }
 
       const settings = result.data?.generalSettings
       const siteName = settings?.title || normalizedUrl
 
       // Update session with site name
-      setWordPressSession(event, normalizedUrl, siteName)
+      await setWordPressSession(normalizedUrl, siteName)
 
-      return jsonResult({
+      return {
         status: 'connected',
         wordpressUrl: normalizedUrl,
         siteName,
@@ -114,14 +112,15 @@ The WordPress site must have WPGraphQL plugin installed and accessible.`,
         siteLanguage: settings?.language,
         message: `Successfully connected to "${siteName}"`,
         hint: 'You can now use other WPNuxt tools. The WordPress URL is remembered for this session.'
-      })
-    } catch (error) {
+      }
+    }
+    catch (error) {
       // Clear the failed session
-      clearWordPressSession(event)
+      await clearWordPressSession()
 
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
-      return jsonResult({
+      return {
         status: 'error',
         message: `Failed to connect to WordPress at ${normalizedUrl}`,
         error: errorMessage,
@@ -131,7 +130,7 @@ The WordPress site must have WPGraphQL plugin installed and accessible.`,
           'Verify the URL does not have a trailing slash',
           'Try accessing /graphql directly in a browser'
         ]
-      })
+      }
     }
   }
 })

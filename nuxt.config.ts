@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   extends: ['docus'],
 
-  modules: ['@nuxtjs/plausible'],
+  modules: ['@nuxtjs/mcp-toolkit', '@nuxtjs/plausible'],
 
   css: ['~/assets/css/main.css'],
 
@@ -68,13 +68,6 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2026-02-16',
 
-  // Force exit after build - workaround for @modelcontextprotocol/sdk keeping process alive
-  hooks: {
-    close: () => {
-      setTimeout(() => process.exit(0), 1000)
-    }
-  },
-
   llms: {
     domain: 'https://wpnuxt.com'
   },
@@ -85,7 +78,8 @@ export default defineNuxtConfig({
 
   mcp: {
     name: 'WPNuxt',
-    browserRedirect: '/ai'
+    browserRedirect: '/ai',
+    sessions: true
   },
 
   ogImage: {

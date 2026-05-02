@@ -6,9 +6,8 @@ import {
   MENUS_QUERY,
   SITE_SETTINGS_QUERY
 } from '../../utils/graphql'
-import { getNuxtUICSSSetup } from '../../utils/nuxt-ui-mcp'
-import { getNuxtCSSSetup } from '../../utils/nuxt-docs'
 import { getWordPressUrl } from '../../utils/wordpress-session'
+
 
 interface ContentType {
   name: string
@@ -531,31 +530,8 @@ logs
 
 /**
  * Generate main.css content for Nuxt UI setup.
- * Attempts to fetch the latest setup from Nuxt UI MCP server,
- * falls back to Nuxt docs, then to default values.
  */
-async function generateMainCSS(): Promise<string> {
-  // Try to get CSS setup from Nuxt UI MCP server
-  try {
-    const nuxtUICss = await getNuxtUICSSSetup()
-    if (nuxtUICss?.imports.length) {
-      return nuxtUICss.imports.join('\n')
-    }
-  } catch {
-    console.log('Nuxt UI MCP server not available, trying Nuxt docs...')
-  }
-
-  // Try to get CSS setup from Nuxt docs
-  try {
-    const nuxtCss = await getNuxtCSSSetup('nuxt-ui')
-    if (nuxtCss?.cssFile?.content) {
-      return nuxtCss.cssFile.content
-    }
-  } catch {
-    console.log('Nuxt docs not available, using defaults...')
-  }
-
-  // Default CSS imports for Nuxt UI v3
+function generateMainCSS(): string {
   return `@import "tailwindcss";
 @import "@nuxt/ui";`
 }
@@ -603,8 +579,7 @@ Then use wpnuxt_generate_pages with these preferences to create the appropriate 
   },
   async handler({ projectName, packageManager = 'pnpm', includeNuxtUI = true, generatePages = true, generateComponents = true, setupMenus = true, generateQueries = true }) {
     // Get WordPress URL from session, header, or environment
-    const event = useEvent()
-    const wordpressUrl = getWordPressUrl(event)
+    const wordpressUrl = await getWordPressUrl()
 
     if (!wordpressUrl) {
       return textResult('Error: WordPress URL not configured. Use wp_connect first to connect to a WordPress site.')
@@ -686,7 +661,7 @@ Then use wpnuxt_generate_pages with these preferences to create the appropriate 
 
     // Add main.css for Nuxt UI (fetches setup from Nuxt UI MCP or Nuxt docs)
     if (includeNuxtUI) {
-      const mainCssContent = await generateMainCSS()
+      const mainCssContent = generateMainCSS()
       files.push({ path: 'app/assets/css/main.css', content: mainCssContent })
     }
 

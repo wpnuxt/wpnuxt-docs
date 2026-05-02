@@ -1,106 +1,77 @@
 /**
  * WordPress Session Manager
  *
- * Manages the WordPress URL for the current MCP session.
- * Stores the URL server-side and provides utilities to get/set it.
+ * Manages the WordPress URL for the current MCP session using the
+ * toolkit's built-in useMcpSession() for proper MCP-Session-Id support.
  */
 
-import type { H3Event } from 'h3'
-
-interface WordPressSession {
+interface WPSession {
   wordpressUrl: string
-  siteName?: string
-  connectedAt: Date
-  lastUsed: Date
+  siteName: string
+  connectedAt: string
 }
 
-// In-memory session storage (per server instance)
-// In production, this could be replaced with Redis or another persistent store
-const sessions = new Map<string, WordPressSession>()
-
-// Default session ID for when we can't identify the client
-const DEFAULT_SESSION_ID = 'default'
+/**
+ * Get the WordPress session data
+ */
+async function getWPSession() {
+  return useMcpSession<WPSession>()
+}
 
 /**
- * Get session ID from request event
- * Uses a combination of headers to identify the client
+ * Get the current WordPress session info
  */
-export function getSessionId(event: H3Event): string {
-  // Try to get a unique identifier from headers
-  const clientId = getHeader(event, 'x-mcp-client-id')
-  const userAgent = getHeader(event, 'user-agent')
-
-  if (clientId) {
-    return clientId
-  }
-
-  // Fallback to a hash of user-agent or default
-  if (userAgent) {
-    // Simple hash for session identification
-    let hash = 0
-    for (let i = 0; i < userAgent.length; i++) {
-      const char = userAgent.charCodeAt(i)
-      hash = ((hash << 5) - hash) + char
-      hash = hash & hash // Convert to 32bit integer
+export async function getWordPressSession(): Promise<{
+  wordpressUrl: string | null
+  siteName: string | null
+  connectedAt: string | null
+}> {
+  try {
+    const session = await getWPSession()
+    const url = await session.get('wordpressUrl')
+    if (!url) {
+      return { wordpressUrl: null, siteName: null, connectedAt: null }
     }
-    return `session_${Math.abs(hash)}`
+    return {
+      wordpressUrl: url,
+      siteName: await session.get('siteName'),
+      connectedAt: await session.get('connectedAt')
+    }
   }
-
-  return DEFAULT_SESSION_ID
-}
-
-/**
- * Get the current WordPress session
- */
-export function getWordPressSession(event: H3Event): WordPressSession | null {
-  const sessionId = getSessionId(event)
-  const session = sessions.get(sessionId)
-
-  if (session) {
-    // Update last used time
-    session.lastUsed = new Date()
+  catch {
+    return { wordpressUrl: null, siteName: null, connectedAt: null }
   }
-
-  return session || null
 }
 
 /**
  * Set the WordPress URL for the current session
  */
-export function setWordPressSession(
-  event: H3Event,
+export async function setWordPressSession(
   wordpressUrl: string,
   siteName?: string
-): WordPressSession {
-  const sessionId = getSessionId(event)
-
-  // Normalize URL (remove trailing slash)
+): Promise<void> {
+  const session = await getWPSession()
   const normalizedUrl = wordpressUrl.replace(/\/+$/, '')
-
-  const session: WordPressSession = {
-    wordpressUrl: normalizedUrl,
-    siteName,
-    connectedAt: new Date(),
-    lastUsed: new Date()
-  }
-
-  sessions.set(sessionId, session)
-  return session
+  await session.set('wordpressUrl', normalizedUrl)
+  await session.set('siteName', siteName ?? '')
+  await session.set('connectedAt', new Date().toISOString())
 }
 
 /**
  * Clear the WordPress session
  */
-export function clearWordPressSession(event: H3Event): void {
-  const sessionId = getSessionId(event)
-  sessions.delete(sessionId)
+export async function clearWordPressSession(): Promise<void> {
+  const session = await getWPSession()
+  await session.clear()
 }
 
 /**
  * Get WordPress URL from session, header, or environment
  * Priority: Header > Session > Environment
  */
-export function getWordPressUrl(event: H3Event): string | null {
+export async function getWordPressUrl(): Promise<string | null> {
+  const event = useEvent()
+
   // 1. Check header first (explicit override)
   const headerUrl = getHeader(event, 'x-wordpress-url')
   if (headerUrl) {
@@ -108,9 +79,15 @@ export function getWordPressUrl(event: H3Event): string | null {
   }
 
   // 2. Check session
-  const session = getWordPressSession(event)
-  if (session?.wordpressUrl) {
-    return session.wordpressUrl
+  try {
+    const session = await getWPSession()
+    const sessionUrl = await session.get('wordpressUrl')
+    if (sessionUrl) {
+      return sessionUrl
+    }
+  }
+  catch {
+    // Session not available (e.g. outside MCP context)
   }
 
   // 3. Fall back to environment
@@ -123,25 +100,17 @@ export function getWordPressUrl(event: H3Event): string | null {
 }
 
 /**
- * Check if a WordPress URL is configured (from any source)
- */
-export function hasWordPressUrl(event: H3Event): boolean {
-  return getWordPressUrl(event) !== null
-}
-
-/**
  * Get session info for display
  */
-export function getSessionInfo(event: H3Event): {
+export async function getSessionInfo(): Promise<{
   hasSession: boolean
   wordpressUrl: string | null
   siteName: string | null
   source: 'header' | 'session' | 'environment' | 'none'
-  connectedAt: Date | null
-} {
+  connectedAt: string | null
+}> {
+  const event = useEvent()
   const headerUrl = getHeader(event, 'x-wordpress-url')
-  const session = getWordPressSession(event)
-  const envUrl = useRuntimeConfig().wordpressUrl
 
   if (headerUrl) {
     return {
@@ -153,16 +122,24 @@ export function getSessionInfo(event: H3Event): {
     }
   }
 
-  if (session) {
-    return {
-      hasSession: true,
-      wordpressUrl: session.wordpressUrl,
-      siteName: session.siteName || null,
-      source: 'session',
-      connectedAt: session.connectedAt
+  try {
+    const session = await getWPSession()
+    const url = await session.get('wordpressUrl')
+    if (url) {
+      return {
+        hasSession: true,
+        wordpressUrl: url,
+        siteName: await session.get('siteName'),
+        source: 'session',
+        connectedAt: await session.get('connectedAt')
+      }
     }
   }
+  catch {
+    // Session not available
+  }
 
+  const envUrl = useRuntimeConfig().wordpressUrl
   if (envUrl) {
     return {
       hasSession: true,
@@ -181,15 +158,3 @@ export function getSessionInfo(event: H3Event): {
     connectedAt: null
   }
 }
-
-// Cleanup old sessions periodically (older than 24 hours)
-const SESSION_MAX_AGE = 24 * 60 * 60 * 1000 // 24 hours
-
-setInterval(() => {
-  const now = new Date()
-  for (const [sessionId, session] of sessions.entries()) {
-    if (now.getTime() - session.lastUsed.getTime() > SESSION_MAX_AGE) {
-      sessions.delete(sessionId)
-    }
-  }
-}, 60 * 60 * 1000) // Check every hour
