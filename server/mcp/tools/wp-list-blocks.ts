@@ -46,7 +46,7 @@ function extractBlocksFromContent(rawContent: string | null | undefined): Array<
 
   while ((match = blockRegex.exec(rawContent)) !== null) {
     const namespace = match[1] ? match[1].slice(0, -1) : 'core'
-    const blockName = match[2]
+    const blockName = match[2]!
     const attributesJson = match[3]
 
     let attributes: Record<string, unknown> | undefined
@@ -124,7 +124,7 @@ export default defineMcpTool({
       if (!byNamespace[block.namespace]) {
         byNamespace[block.namespace] = []
       }
-      byNamespace[block.namespace].push(block)
+      byNamespace[block.namespace]!.push(block)
     })
 
     // Identify core vs custom blocks

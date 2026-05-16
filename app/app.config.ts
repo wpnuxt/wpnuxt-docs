@@ -1,4 +1,4 @@
-export default defineAppConfig({
+const appConfig: Record<string, unknown> = {
   ui: {
     colors: {
       primary: 'reefgold',
@@ -122,4 +122,6 @@ export default defineAppConfig({
       ]
     }
   }
-})
+}
+
+export default defineAppConfig(appConfig)

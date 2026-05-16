@@ -239,7 +239,7 @@ function generateFindReplaceList(issues: MigrationIssue[]): FindReplaceItem[] {
         seenPatterns.add(issue.pattern)
         findReplaceList.push({
           find: issue.pattern,
-          replace: COMPOSABLE_RENAMES[issue.pattern],
+          replace: COMPOSABLE_RENAMES[issue.pattern]!,
           description: issue.description
         })
       } else if (!seenPatterns.has(issue.pattern)) {
@@ -349,7 +349,7 @@ function scanContent(content: string, filename: string): MigrationIssue[] {
   const lines = content.split('\n')
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+    const line = lines[i]!
     const lineNum = i + 1
 
     // Check composables
@@ -487,7 +487,7 @@ function scanUsagePatterns(content: string, filename: string): MigrationIssue[] 
   let lifecycleHookName = ''
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+    const line = lines[i]!
     const lineNum = i + 1
 
     // Track brace depth to understand scope
@@ -525,7 +525,7 @@ function scanUsagePatterns(content: string, filename: string): MigrationIssue[] 
       if (regex.test(line)) {
         // Extract the composable name from the match
         const nameMatch = line.match(/\b(use[A-Z][a-zA-Z]*)\s*\(/)
-        const composableName = nameMatch ? nameMatch[1] : pattern
+        const composableName = nameMatch?.[1] ?? pattern
 
         // Check if inside lifecycle hook
         if (insideLifecycleHook) {
@@ -558,7 +558,7 @@ function scanUsagePatterns(content: string, filename: string): MigrationIssue[] 
         // Track destructured data variables (they are Refs)
         const destructureMatch = line.match(/\{\s*data:\s*(\w+)/)
         if (destructureMatch) {
-          refVariables.add(destructureMatch[1])
+          refVariables.add(destructureMatch[1]!)
         }
         // Also track direct data destructure
         const directDataMatch = line.match(/\{\s*data\s*[,}]/)
@@ -570,7 +570,7 @@ function scanUsagePatterns(content: string, filename: string): MigrationIssue[] 
         // Pattern: const menu = useMenu(...) - NOT destructured
         const directAssignMatch = line.match(/const\s+(\w+)\s*=\s*(use(?:WP|Lazy|Async)?[A-Z]\w*)\s*\(/)
         if (directAssignMatch && !line.includes('{')) {
-          composableResultVars.add(directAssignMatch[1])
+          composableResultVars.add(directAssignMatch[1]!)
         }
       }
     }

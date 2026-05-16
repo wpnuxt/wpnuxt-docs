@@ -618,7 +618,7 @@ function handleLinkClick() {
 
   return {
     filename: `components/menu/${componentName}.vue`,
-    content: variants[variant]
+    content: variants[variant]!
   }
 }
 

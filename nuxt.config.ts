@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   extends: ['docus'],
 
-  modules: ['@nuxtjs/mcp-toolkit', '@nuxtjs/plausible'],
+  modules: ['@nuxtjs/mcp-toolkit', '@nuxtjs/plausible', '@nuxt/eslint'],
 
   css: ['~/assets/css/main.css'],
 
@@ -83,10 +83,6 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    enabled: false
-  },
-
-  pwa: {
     enabled: false
   },
 

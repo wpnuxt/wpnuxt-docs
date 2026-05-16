@@ -5,18 +5,25 @@
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "lint": "eslint .",
+    "typecheck": "bash scripts/typecheck.sh",
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build"
   },
   "dependencies": {
-    "@nuxtjs/mcp-toolkit": "^0.16.0",
+    "@nuxt/eslint": "1.15.2",
+    "@nuxtjs/mcp-toolkit": "^0.16.1",
     "@shikijs/engine-javascript": "^4.0.2",
-    "docus": "5.10.0",
-    "nuxt": "^4.4.4",
+    "docus": "5.11.0",
+    "eslint": "^10.3.0",
+    "nuxt": "^4.4.5",
     "shiki": "^4.0.2",
-    "zod": "^4.4.2"
+    "zod": "^4.4.3"
   },
   "packageManager": "pnpm@10.33.0",
   "devDependencies": {
-    "@nuxtjs/plausible": "^3.0.2"
+    "@nuxtjs/plausible": "^3.0.2",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.2.9"
   }
 }
