@@ -2,6 +2,7 @@
   "name": "@wpnuxt/docs",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.11.2",
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
