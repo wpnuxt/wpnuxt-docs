@@ -37,6 +37,10 @@ export default defineNuxtConfig({
     '/mcp/**': { ssr: true },
     '/sse': { ssr: true },
 
+    // Plausible through our own origin (plausible.apiHost), so ad blockers don't drop it
+    '/plio/js/script.js': { proxy: 'https://plausible.io/js/script.js' },
+    '/plio/api/event': { proxy: 'https://plausible.io/api/event' },
+
     // Redirects: old /docs/* structure → new root structure
     '/docs/getting-started/configuration': { redirect: { to: '/reference/configuration', statusCode: 301 } },
     '/docs/getting-started/composables': { redirect: { to: '/reference/composables', statusCode: 301 } },

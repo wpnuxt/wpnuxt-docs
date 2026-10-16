@@ -1,0 +1,9 @@
+node_modules
+.nuxt
+.output
+.data
+.vercel
+.git
+.env
+.env.*
+.DS_Store
