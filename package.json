@@ -13,19 +13,19 @@
     "check": "pnpm run lint && pnpm run typecheck && pnpm run build"
   },
   "dependencies": {
-    "@nuxt/eslint": "1.16.0",
-    "@nuxtjs/mcp-toolkit": "^0.17.2",
-    "@shikijs/engine-javascript": "^4.2.0",
-    "docus": "5.12.1",
-    "eslint": "^10.5.0",
+    "@nuxt/eslint": "1.17.0",
+    "@nuxtjs/mcp-toolkit": "^0.24.2",
+    "@shikijs/engine-javascript": "^4.5.0",
+    "docus": "5.15.0",
+    "eslint": "^10.12.0",
     "h3": "^1.15.11",
-    "nuxt": "^4.4.8",
-    "shiki": "^4.2.0",
-    "zod": "^4.4.3"
+    "nuxt": "^4.6.1",
+    "shiki": "^4.5.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@nuxtjs/plausible": "^3.0.2",
+    "@nuxtjs/plausible": "^4.0.0",
     "typescript": "^6.0.3",
-    "vue-tsc": "^3.3.5"
+    "vue-tsc": "^3.3.13"
   }
 }
