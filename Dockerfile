@@ -16,7 +16,11 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 
 ENV NUXT_SOURCEMAPS=false \
     NODE_OPTIONS=--max-old-space-size=4096
-RUN pnpm run build && test -f .output/server/index.mjs
+# Docus only builds its AI assistant when AI_GATEWAY_API_KEY is set at build time. It just checks
+# that the key exists, so a placeholder keeps the real key out of the image; the real one is set
+# at runtime.
+RUN AI_GATEWAY_API_KEY=build-time-placeholder pnpm run build && \
+    test -f .output/server/index.mjs
 
 FROM node:24-slim
 WORKDIR /app
