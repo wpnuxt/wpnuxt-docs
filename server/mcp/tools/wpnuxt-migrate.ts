@@ -757,7 +757,7 @@ The AI assistant should:
     }
 
     migrationSteps.push(`${stepNum++}. Run pnpm dev:prepare to regenerate types`)
-    migrationSteps.push(`${stepNum++}. Test all pages`)
+    migrationSteps.push(`${stepNum}. Test all pages`)
 
     return jsonResult({
       summary: {
