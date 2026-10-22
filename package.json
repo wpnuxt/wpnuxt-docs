@@ -2,7 +2,7 @@
   "name": "@wpnuxt/docs",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@12.11.2",
+  "packageManager": "pnpm@12.14.0",
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
@@ -18,9 +18,9 @@
     "@nuxtjs/mcp-toolkit": "^0.24.2",
     "@shikijs/engine-javascript": "^4.5.0",
     "docus": "5.15.0",
-    "eslint": "^10.12.0",
+    "eslint": "^10.13.0",
     "h3": "^1.15.11",
-    "nuxt": "^4.6.1",
+    "nuxt": "^4.6.2",
     "shiki": "^4.5.0",
     "zod": "^4.6.7"
   },
