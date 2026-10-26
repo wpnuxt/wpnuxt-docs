@@ -14,6 +14,9 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     pnpm config set store-dir /pnpm/store && \
     pnpm install --frozen-lockfile
 
+# Changes on every CI run, so the build below is never served from the layer cache: it fetches the
+# docs content and the latest @wpnuxt/core version, which change without a commit in this repo
+ARG CACHE_BUST
 ENV NUXT_SOURCEMAPS=false \
     NODE_OPTIONS=--max-old-space-size=4096
 # Docus only builds its AI assistant when AI_GATEWAY_API_KEY is set at build time. It just checks
