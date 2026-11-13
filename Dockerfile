@@ -2,12 +2,13 @@
 # The docs content is fetched from github.com/wpnuxt/wpnuxt at build time (content.config.ts),
 # so content changes need a rebuild of this image.
 
-FROM node:24-slim AS build
+FROM node:26-slim AS build
 WORKDIR /app
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
     PNPM_HOME=/pnpm \
     PATH=/pnpm:$PATH
-RUN corepack enable
+# Node 25+ no longer bundles corepack
+RUN npm install -g corepack && corepack enable
 
 COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
@@ -25,7 +26,7 @@ ENV NUXT_SOURCEMAPS=false \
 RUN AI_GATEWAY_API_KEY=build-time-placeholder pnpm run build && \
     test -f .output/server/index.mjs
 
-FROM node:24-slim
+FROM node:26-slim
 WORKDIR /app
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
