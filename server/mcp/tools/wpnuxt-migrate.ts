@@ -75,7 +75,7 @@ const MIGRATION_PATTERNS = {
       v1: 'useWPUri',
       v2: null, // Removed - needs helper
       description: 'Get WordPress URL from runtime config',
-      replacement: 'Use useRuntimeConfig().public.wordpressUrl',
+      replacement: 'Use useRuntimeConfig().public.wordpressUrl. For postEdit(), use getWPEditUrl(databaseId)',
       helperCode: `export function useWPUri() {
   return { url: useRuntimeConfig().public.wordpressUrl as string }
 }`
@@ -181,12 +181,6 @@ const MIGRATION_PATTERNS = {
   ],
   components: [
     {
-      v1: '<WPContent',
-      v2: null,
-      description: 'WPContent component removed',
-      replacement: 'Use v-sanitize-html directive or @wpnuxt/blocks'
-    },
-    {
       v1: '<ContentRenderer',
       v2: null,
       description: 'ContentRenderer component removed',
@@ -196,7 +190,7 @@ const MIGRATION_PATTERNS = {
       v1: '<StagingBanner',
       v2: null,
       description: 'StagingBanner component removed',
-      replacement: 'Implement yourself if needed'
+      replacement: 'Implement yourself if needed. For its "Edit" link, use getWPEditUrl(databaseId)'
     }
   ]
 }
@@ -650,7 +644,7 @@ This tool scans for:
 - Renamed composables (useWPPosts → usePosts, useAsyncWPPosts → useLazyPosts)
 - Unchanged composables (usePrevNextPost is available in v2 with the same API)
 - Renamed directives (v-sanitize → v-sanitize-html)
-- Removed components (<WPContent>, <ContentRenderer>, <StagingBanner>)
+- Removed components (<ContentRenderer>, <StagingBanner>; <WPContent> is still available in v2)
 - Changed configuration options
 
 **New in v2:**
